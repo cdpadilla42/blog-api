@@ -3,7 +3,13 @@ exports.listComments = (req, res) => {
 };
 
 exports.getComment = (req, res) => {
-  res.send('NOT IMPLEMENTED: getComment for ' + req.params.commentId);
+  console.log(req.params);
+  res.send(
+    'NOT IMPLEMENTED: getComment for ' +
+      req.params.commentId +
+      ' comment of ' +
+      req.params.postId
+  );
 };
 
 exports.updateComment = (req, res) => {
