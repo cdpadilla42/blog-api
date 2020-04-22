@@ -3,7 +3,7 @@ exports.listPosts = (req, res) => {
 };
 
 exports.showPost = (req, res) => {
-  res.send('NOT IMPLEMENTED: showPost');
+  res.send('NOT IMPLEMENTED: showPost for ' + req.params.postId);
 };
 
 exports.createPost = (req, res) => {
