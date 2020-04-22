@@ -2,11 +2,17 @@ const Post = require('../models/post');
 const { check, validationResult } = require('express-validator');
 
 exports.listPosts = (req, res) => {
-  res.send('NOT IMPLEMENTED: listPosts');
+  Post.find().exec((err, postList) => {
+    if (err) return next(err);
+    res.json({ postList });
+  });
 };
 
 exports.showPost = (req, res) => {
-  res.send('NOT IMPLEMENTED: showPost for ' + req.params.postId);
+  Post.findById(req.params.postId).exec((err, post) => {
+    if (err) return next(err);
+    res.json({ post });
+  });
 };
 
 exports.createPost = [
@@ -31,8 +37,11 @@ exports.createPost = [
         post,
       });
     } else {
-      res.json({
-        post,
+      post.save((err, savedPost) => {
+        if (err) return next(err);
+        res.json({
+          savedPost,
+        });
       });
     }
     // Save / Redirect
