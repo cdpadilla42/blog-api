@@ -49,7 +49,10 @@ exports.createPost = [
 ];
 
 exports.deletePost = (req, res) => {
-  res.send('NOT IMPLEMENTED: deletePost');
+  Post.findByIdAndRemove(req.params.postId, (err, post) => {
+    if (err) return next(err);
+    res.send(`Deleted ${post.title}`);
+  });
 };
 
 exports.updatePost = (req, res) => {
