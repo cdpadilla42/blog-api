@@ -17,9 +17,9 @@ router.get('/:postId', postsControllers.showPost);
 
 router.get('/:postId/comments', commentController.listComments);
 
-router.get('/:postId/comments/:commentId', commentController.getComment);
-
 router.post('/:postId/comments', commentController.createComment);
+
+router.get('/:postId/comments/:commentId', commentController.getComment);
 
 router.put('/:postId/comments/:commentId', commentController.updateComment);
 

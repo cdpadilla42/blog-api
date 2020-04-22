@@ -1,3 +1,6 @@
+const Comment = require('../models/comment');
+const { check, validationResult } = require('express-validator');
+
 exports.listComments = (req, res) => {
   res.send('NOT IMPLEMENTED: listComments');
 };
@@ -18,9 +21,34 @@ exports.updateComment = (req, res) => {
   );
 };
 
-exports.createComment = (req, res) => {
-  res.send('NOT IMPLEMENTED: createComment');
-};
+exports.createComment = [
+  // validate & Sanitize
+  check('author').isLength({ min: 1 }),
+  check('text').isLength({ min: 1 }),
+  // process
+  (req, res, next) => {
+    // Create new comment
+    const comment = new Comment({
+      author: req.body.author,
+      text: req.body.text,
+      date: Date.now(),
+    });
+    // handle errs
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.json({
+        errors,
+        comment,
+      });
+      // TODO Redirect to form
+    } else {
+      // TODO save comment
+      res.json({
+        comment,
+      });
+    }
+  },
+];
 
 exports.deleteComment = (req, res) => {
   res.send(
