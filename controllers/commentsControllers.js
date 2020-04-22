@@ -13,7 +13,9 @@ exports.getComment = (req, res) => {
 };
 
 exports.updateComment = (req, res) => {
-  res.send('NOT IMPLEMENTED: updateComment');
+  res.send(
+    `NOT IMPLEMENTED: updateComment for post ${req.params.postId} with comment ${req.params.commentId}`
+  );
 };
 
 exports.createComment = (req, res) => {
@@ -21,5 +23,7 @@ exports.createComment = (req, res) => {
 };
 
 exports.deleteComment = (req, res) => {
-  res.send('NOT IMPLEMENTED: deleteComment');
+  res.send(
+    `NOT IMPLEMENTED: deleteComment for post ${req.params.postId} with comment ${req.params.commentId}`
+  );
 };
