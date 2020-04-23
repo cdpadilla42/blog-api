@@ -8,9 +8,14 @@ exports.listPosts = (req, res) => {
   });
 };
 
-exports.showPost = (req, res) => {
+exports.showPost = (req, res, next) => {
   Post.findById(req.params.postId).exec((err, post) => {
     if (err) return next(err);
+    if (post == null) {
+      const error = new Error('Post Not Found');
+      error.status = 404;
+      return next(error);
+    }
     res.json({ post });
   });
 };
