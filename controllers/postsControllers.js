@@ -56,6 +56,11 @@ exports.createPost = [
 exports.deletePost = (req, res) => {
   Post.findByIdAndRemove(req.params.postId, (err, post) => {
     if (err) return next(err);
+    if (post == null) {
+      const error = new Error('Post Not Found');
+      error.status = 404;
+      return next(error);
+    }
     res.send(`Deleted ${post.title}`);
   });
 };
