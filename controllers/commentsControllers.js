@@ -13,6 +13,11 @@ exports.listComments = (req, res, next) => {
 exports.getComment = (req, res, next) => {
   Comment.findById(req.params.commentId).exec((err, comment) => {
     if (err) return next(err);
+    if (comment == null) {
+      const error = new Error('Comment not found');
+      error.status = 404;
+      return next(error);
+    }
     res.json({
       comment,
     });
@@ -84,8 +89,14 @@ exports.createComment = [
   },
 ];
 
-exports.deleteComment = (req, res) => {
-  res.send(
-    `NOT IMPLEMENTED: deleteComment for post ${req.params.postId} with comment ${req.params.commentId}`
-  );
+exports.deleteComment = (req, res, next) => {
+  Comment.findByIdAndRemove(req.params.commentId).exec((err, comment) => {
+    if (err) return next(err);
+    if (comment == null) {
+      const error = new Error('Comment Not Found');
+      error.status = 404;
+      return next(error);
+    }
+    res.send(`Deleted ${comment.author}'s comment`);
+  });
 };
