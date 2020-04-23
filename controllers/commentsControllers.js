@@ -1,18 +1,22 @@
 const Comment = require('../models/comment');
 const { check, validationResult } = require('express-validator');
 
-exports.listComments = (req, res) => {
-  res.send('NOT IMPLEMENTED: listComments');
+exports.listComments = (req, res, next) => {
+  Comment.find().exec((err, comments) => {
+    if (err) return next(err);
+    res.json({
+      comments,
+    });
+  });
 };
 
-exports.getComment = (req, res) => {
-  console.log(req.params);
-  res.send(
-    'NOT IMPLEMENTED: getComment for ' +
-      req.params.commentId +
-      ' comment of ' +
-      req.params.postId
-  );
+exports.getComment = (req, res, next) => {
+  Comment.findById(req.params.commentId).exec((err, comment) => {
+    if (err) return next(err);
+    res.json({
+      comment,
+    });
+  });
 };
 
 exports.updateComment = (req, res) => {
@@ -32,6 +36,7 @@ exports.createComment = [
       author: req.body.author,
       text: req.body.text,
       date: Date.now(),
+      post: req.params.postId,
     });
     // handle errs
     const errors = validationResult(req);
@@ -43,8 +48,11 @@ exports.createComment = [
       // TODO Redirect to form
     } else {
       // TODO save comment
-      res.json({
-        comment,
+      comment.save((err, savedComment) => {
+        if (err) return next(err);
+        res.json({
+          comment: savedComment,
+        });
       });
     }
   },
