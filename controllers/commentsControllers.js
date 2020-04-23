@@ -19,11 +19,37 @@ exports.getComment = (req, res, next) => {
   });
 };
 
-exports.updateComment = (req, res) => {
-  res.send(
-    `NOT IMPLEMENTED: updateComment for post ${req.params.postId} with comment ${req.params.commentId}`
-  );
-};
+exports.updateComment = [
+  // validate & Sanitize
+  check('text').isLength({ min: 1 }),
+  check('author').isLength({ min: 1 }),
+  // Process
+  (req, res, next) => {
+    // create comment
+    const comment = new Comment({
+      text: req.body.text,
+      author: req.body.author,
+      date: Date.now(),
+      _id: req.params.commentId,
+      post: req.params.postId,
+    });
+    // handle errs
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.json({
+        errors: errors.array(),
+        comment,
+      });
+    } else {
+      // save
+      Comment.findByIdAndUpdate(req.params.commentId, comment, {}, (err) => {
+        res.json({
+          comment,
+        });
+      });
+    }
+  },
+];
 
 exports.createComment = [
   // validate & Sanitize
