@@ -37,6 +37,7 @@ exports.createPost = [
         post,
       });
     } else {
+      // Save
       post.save((err, savedPost) => {
         if (err) return next(err);
         res.json({
@@ -44,7 +45,6 @@ exports.createPost = [
         });
       });
     }
-    // Save / Redirect
   },
 ];
 
@@ -55,6 +55,36 @@ exports.deletePost = (req, res) => {
   });
 };
 
-exports.updatePost = (req, res) => {
-  res.send('NOT IMPLEMENTED: updatePost');
-};
+exports.updatePost = [
+  // Validate & Sanitize
+  check('title').trim(),
+  check('published').toBoolean(),
+  // Process
+  (req, res, next) => {
+    // New Post
+    const post = new Post({
+      title: req.body.title,
+      text: req.body.text,
+      date: Date.now(),
+      published: req.body.published,
+      user: req.body.user,
+      _id: req.params.postId,
+    });
+    // Handle Errs
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.json({
+        errors,
+        post,
+      });
+    } else {
+      // Save
+      Post.findByIdAndUpdate(req.params.postId, post, {}, (err) => {
+        if (err) return err;
+        res.json({
+          post,
+        });
+      });
+    }
+  },
+];
